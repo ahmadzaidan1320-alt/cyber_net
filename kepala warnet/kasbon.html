@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Cyber_Net</title>
+    <!-- Link font dan style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3e;
+            --accent: #1690ee;
+            --accent2: #4fc3f7;
+            --danger: #ef5350;
+            --success: #66bb6a;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 8px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.92) 0%,
+                    rgba(10, 18, 48, 0.95) 50%,
+                    rgba(5, 10, 30, 0.98) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            min-height: 100vh;
+            font-family: var(--sans);
+            font-size: 14px;
+            color: var(--text);
+            padding: 0;
+            /* hilangkan padding agar pas di atas */
+            margin: 0;
+        }
+
+        /* Top bar */
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            /* sedikit padding agar rapat di atas dan bawah */
+            height: 60px;
+            /* tinggi yang cukup rapat tapi tidak terlalu kecil */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar a {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--surface);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            gap: 4px;
+            padding: 8px 16px;
+            /* sama agar pas di atas */
+            overflow-x: auto;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            /* rapat dan serasi */
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: color .15s, border-color .15s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main content */
+        .page {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px 16px 60px;
+        }
+
+        .page-title {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity .15s, transform .1s;
+            background: var(--accent);
+            color: #111;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        /* Table styles */
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #22253a;
+            color: var(--accent);
+            padding: 10px 12px;
+            text-align: left;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <a class="topbar-brand" href="index.php">Cyber<span>_Net</span></a>
+        <div style="display:flex;align-items:center;gap:12px">
+            <span
+                style="font-family:var(--mono);font-size:10px;color:var(--accent2);background:rgba(79,195,247,.12);border:1px solid rgba(79,195,247,.25);padding:3px 8px;border-radius:99px">👤
+                ADMIN</span>
+            <a href="?logout=1"
+                style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:99px"
+                onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'">Logout</a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="dasboard.html"> 🏠 Home </a>
+        <a href="data sales.html">📋 Lihat Data </a>
+        <a href="kasbon.html" class="active"> 💳 Kasbon </a>
+        <a href="laporan op.html"> 👥 Op Report </a>
+        <a href="trouble.html">🔧 Trouble </a>
+        <a href="izzin.html">🏖️ Izin </a>
+        <a href="equipment.html">🖥️ Equipment </a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="page">
+        <h1 class="page-title">Data Kasbon Tersimpan</h1>
+        <!-- Tabel Data Kasbon -->
+        <div class="table-wrap">
+            <table id="kasbonTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Lokasi</th>
+                        <th>Operator</th>
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody id="kasbonTBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk menampilkan data dari localStorage
+        function loadKasbonData() {
+            const tbody = document.getElementById('kasbonTBody');
+            tbody.innerHTML = '';
+            const data = JSON.parse(localStorage.getItem('dataKasbon')) || [];
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+      <td>${item.tanggal}</td>
+      <td>${item.lokasi}</td>
+      <td>${item.operator}</td>
+      <td>Rp ${parseInt(item.omset).toLocaleString('id-ID')}</td>
+    `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Panggil saat halaman dimuat
+        loadKasbonData();
+    </script>
+
+</body>
+
+</html>

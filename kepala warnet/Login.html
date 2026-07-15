@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Cyber_Net </title>
+    <link rel="preconnect" href="dasboard.html">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: rgba(26, 29, 39, 0.95);
+            --border: rgba(42, 45, 62, 0.8);
+            --accent: #151ed1;
+            --accent-glow: rgba(21, 82, 203, 0.6);
+            --danger: #ef5350;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 12px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.85) 0%,
+                    rgba(10, 18, 48, 0.9) 40%,
+                    rgba(5, 10, 30, 0.95) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+            transition: opacity 0.5s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(240, 192, 64, 0.05) 2px,
+                    rgba(240, 192, 64, 0.05) 4px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(240, 192, 64, 0.03) 2px,
+                    rgba(240, 192, 64, 0.03) 4px);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%) translateX(-100%);
+            }
+
+            100% {
+                transform: translateY(100%) translateX(100%);
+            }
+        }
+
+        /* Login Card */
+        .box {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            backdrop-filter: blur(20px) saturate(1.2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(240, 192, 64, 0.2),
+                inset 0 1px 0 rgba(240, 192, 64, 0.1);
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s ease;
+        }
+
+        /* Klasifikasi Efek Animasi via JS */
+        .float-animation {
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        .shake-animation {
+            animation: shake 0.4s ease-in-out;
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 25px rgba(239, 83, 80, 0.4) !important;
+        }
+
+        .success-animation {
+            transform: scale(0.8) translateY(-50px) !important;
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        @keyframes cardFloat {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-10px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(10px);
+            }
+        }
+
+        /* Logo */
+        .logo {
+            font-family: var(--mono);
+            font-size: clamp(1.4rem, 5vw, 2rem);
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 0 30px var(--accent-glow);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from {
+                filter: drop-shadow(0 0 10px var(--accent-glow));
+            }
+
+            to {
+                filter: drop-shadow(0 0 20px var(--accent-glow));
+            }
+        }
+
+        .logo span {
+            color: var(--muted);
+            background: none;
+            -webkit-text-fill-color: var(--muted);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 2.5rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            background: rgba(15, 17, 23, 0.9);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) - 2px);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 1rem;
+            padding: 1rem 3.5rem 1rem 1.25rem;
+            outline: none;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(240, 192, 64, 0.2),
+                0 0 20px rgba(240, 192, 64, 0.1);
+            background: rgba(15, 17, 23, 0.98);
+        }
+
+        .toggle-pw {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 1.2rem;
+            padding: 0.4rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .toggle-pw:hover {
+            color: var(--accent);
+            background: rgba(240, 192, 64, 0.1);
+        }
+
+        /* Pesan Error Muncul Dinamis */
+        .error {
+            background: rgba(239, 83, 80, 0.15);
+            border: 1px solid rgba(239, 83, 80, 0.4);
+            color: #ef9a9a;
+            border-radius: calc(var(--radius) - 2px);
+            padding: 0.875rem 1.25rem;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            display: none;
+            /* Sembunyi secara default */
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.125rem;
+            background: linear-gradient(135deg, var(--accent), #e6b800);
+            color: #111;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--sans);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(240, 192, 64, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.4),
+                    transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(240, 192, 64, 0.6);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+                background-attachment: scroll;
+            }
+
+            .box {
+                padding: 2rem 1.5rem;
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box float-animation" id="loginBox">
+        <div class="logo">CYBER <span>NET</span></div>
+        <div class="subtitle">Game Center owner</div>
+
+        <div class="error" id="errorMsg">Password salah! Silakan coba lagi.</div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <label for="pw">Master Password</label>
+            <div class="input-wrap">
+                <input type="password" id="pw" name="password" autocomplete="current-password" autofocus required
+                    placeholder="Enter owner password...">
+                <button type="button" class="toggle-pw" onclick="togglePw()" title="Show/Hide Password">👁</button>
+            </div>
+            <button type="submit" class="btn">Enter System</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePw() {
+            const input = document.getElementById('pw');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault(); // Mencegah form reload otomatis
+
+            const passwordInput = document.getElementById('pw').value;
+            const loginBox = document.getElementById('loginBox');
+            const errorMsg = document.getElementById('errorMsg');
+
+            // --- CONFIG PASSWORD ---
+            // Ganti 'owner123' dengan password yang kamu inginkan
+            const PASSWORD_BENAR = "owner123";
+
+            if (passwordInput === PASSWORD_BENAR) {
+                // --- JIKA BENAR ---
+                errorMsg.style.display = 'none';
+                loginBox.classList.remove('float-animation', 'shake-animation');
+
+                // Tambahkan animasi sukses/menghilang halus
+                loginBox.classList.add('success-animation');
+
+                // Tunggu animasi CSS selesai (400ms) lalu pindah ke halaman dashboard
+                setTimeout(() => {
+                    window.location.href = "dasboard.html"; // Sesuaikan nama file dashboard kamu
+                }, 400);
+
+            } else {
+                // --- JIKA SALAH ---
+                // Tampilkan pesan error
+                errorMsg.style.display = 'block';
+
+                // Triger animasi getar (shake)
+                loginBox.classList.remove('float-animation');
+                loginBox.classList.add('shake-animation');
+
+                // Reset animasi setelah selesai agar bisa digetarkan lagi kalau salah lagi
+                setTimeout(() => {
+                    loginBox.classList.remove('shake-animation');
+                    loginBox.classList.add('float-animation');
+                }, 400);
+
+                // Kosongkan input password dan beri fokus kembali
+                document.getElementById('pw').value = '';
+                document.getElementById('pw').focus();
+            }
+        }
+    </script>
+</body>
+
+</html>

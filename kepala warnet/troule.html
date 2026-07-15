@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trouble Dashboard — Cyber_net</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3e;
+            --accent: #1690ee;
+            --accent2: #4fc3f7;
+            --danger: #ef5350;
+            --success: #66bb6a;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 8px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+
+        /* BACKGROUND MARIO SIMPEL */
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.92) 0%,
+                    rgba(10, 18, 48, 0.95) 50%,
+                    rgba(5, 10, 30, 0.98) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+
+        }
+
+        /* ── Top Bar ── */
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 52px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .topbar-brand span {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: var(--surface);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            gap: 2px;
+            padding: 0 24px;
+            overflow-x: auto;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: color .15s, border-color .15s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ── Page Wrapper ── */
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 24px 60px;
+        }
+
+        /* ── Page Title ── */
+        .page-title {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* ── Tables ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: #22253a;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .data-table tr.duplicate td {
+            background: rgba(239, 83, 80, .08);
+        }
+
+        .data-table tfoot td {
+            font-weight: 600;
+            color: var(--accent);
+            background: #1e2130;
+            border-top: 2px solid var(--border);
+        }
+
+        /* ── Forms ── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            padding: 9px 12px;
+            outline: none;
+            transition: border-color .15s;
+            appearance: auto;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        input[readonly] {
+            background: #22253a;
+            color: var(--accent);
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity .15s, transform .1s;
+        }
+
+        .btn:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #111;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+
+        .filter-bar .form-group {
+            margin-bottom: 0;
+            min-width: 160px;
+        }
+
+        /* ── Inline entries (extra cost / kasbon rows) ── */
+        .entry-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .entry-row input,
+        .entry-row select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .badge-ok {
+            background: rgba(102, 187, 106, .15);
+            color: var(--success);
+        }
+
+        .badge-warn {
+            background: rgba(239, 83, 80, .15);
+            color: var(--danger);
+        }
+
+        .badge-neutral {
+            background: rgba(124, 127, 142, .15);
+            color: var(--muted);
+        }
+
+        /* ── Alert ── */
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: rgba(102, 187, 106, .12);
+            border: 1px solid rgba(102, 187, 106, .3);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 83, 80, .12);
+            border: 1px solid rgba(239, 83, 80, .3);
+            color: var(--danger);
+        }
+
+        .alert-info {
+            background: rgba(79, 195, 247, .10);
+            border: 1px solid rgba(79, 195, 247, .3);
+            color: var(--accent2);
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* ── Responsive Tables ── */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table.sticky-first th:first-child,
+        .data-table.sticky-first td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: var(--surface);
+        }
+
+        .data-table.sticky-first th:first-child {
+            background: #22253a;
+            z-index: 3;
+        }
+
+        .data-table.sticky-first tfoot td:first-child {
+            background: #1e2130;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .page {
+                padding: 16px 12px 40px;
+            }
+
+            nav {
+                padding: 0 8px;
+            }
+
+            nav a {
+                padding: 8px 8px;
+                font-size: 11px;
+                gap: 3px;
+            }
+
+            .topbar {
+                padding: 0 12px;
+                height: 46px;
+            }
+
+            .topbar-brand {
+                font-size: 13px;
+            }
+
+            .page-title {
+                font-size: 18px;
+                margin-bottom: 16px;
+            }
+
+            .filter-bar {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .filter-bar .form-group {
+                min-width: 120px;
+            }
+
+            .card {
+                padding: 14px 16px;
+            }
+
+            /* Smaller table text on mobile */
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th {
+                font-size: 10px;
+                padding: 8px 8px;
+            }
+
+            .data-table td {
+                padding: 7px 8px;
+            }
+
+            /* Hide less important columns on mobile */
+            .data-table .hide-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a span.nav-label {
+                display: none;
+            }
+
+            .data-table {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a class="topbar-brand" href="index.php">Cyber<span>_Net</span></a>
+        <div style="display:flex;align-items:center;gap:12px">
+            <span
+                style="font-family:var(--mono);font-size:10px;color:var(--accent2);background:rgba(79,195,247,.12);border:1px solid rgba(79,195,247,.25);padding:3px 8px;border-radius:99px">👤
+                OWNER</span> <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">25 May
+                2026</span>
+            <a href="?logout=1"
+                style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:99px;transition:color .15s"
+                onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'">Logout</a>
+        </div>
+    </div>
+
+    <nav>
+        <a href="dasboard.html">
+            🏠 Home </a>
+        <a href="data sales.html">
+            📋 Lihat Data </a>
+        <a href="kasbon.html">
+            💳 Kasbon </a>
+        <a href="laporan op.html">
+            👥 Op Report </a>
+        <a href="troule.html" class="active">
+            🔧 Trouble </a>
+        <a href="izzin.html">
+            🏖️ Izin </a>
+        <a href="equipment .html">
+            🖥️ Equipment </a>
+    </nav>
+
+    <div class="page">
+        <h1 class="page-title">Trouble Dashboard</h1>
+
+        <!-- Summary Cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px">
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--danger)">1</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Open</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--warn)">2</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    In Progress</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--success)">13</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Resolved</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:#ff5252">0</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Urgent</div>
+            </div>
+        </div>
+
+        <!-- Open by Branch -->
+        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+            <div
+                style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;display:flex;align-items:center;gap:8px">
+                <span style="font-weight:600;font-size:13px">PUSAT</span>
+                <span style="font-family:var(--mono);font-size:14px;color:var(--warn);font-weight:700">2</span>
+                <span style="font-size:11px;color:var(--muted)">aktif</span>
+            </div>
+            <div
+                style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;display:flex;align-items:center;gap:8px">
+                <span style="font-weight:600;font-size:13px">GRAHA</span>
+                <span style="font-family:var(--mono);font-size:14px;color:var(--warn);font-weight:700">1</span>
+                <span style="font-size:11px;color:var(--muted)">aktif</span>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <form method="get" class="filter-bar">
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status" onchange="this.form.submit()">
+                    <option value="">Semua Status</option>
+                    <option value="open">🔴 Open</option>
+                    <option value="in_progress">🟡 In Progress</option>
+                    <option value="resolved">🟢 Resolved</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Cabang</label>
+                <select name="cabang" onchange="this.form.submit()">
+                    <option value="">Semua Cabang</option>
+                    <option value="GRAHA">GRAHA</option>
+                    <option value="PUSAT">PUSAT</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select name="kategori" onchange="this.form.submit()">
+                    <option value="">Semua Kategori</option>
+                    <option value="Jaringan">Jaringan</option>
+                    <option value="Lainnya">Lainnya</option>
+                    <option value="PC/Hardware">PC/Hardware</option>
+                    <option value="Printer">Printer</option>
+                    <option value="Software">Software</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Prioritas</label>
+                <select name="prioritas" onchange="this.form.submit()">
+                    <option value="">Semua</option>
+                    <option value="tinggi">🔴 Tinggi</option>
+                    <option value="sedang">🟡 Sedang</option>
+                    <option value="rendah">🟢 Rendah</option>
+                </select>
+            </div>
+        </form>
+
+        <!-- Trouble List -->
+
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260524-0016</span>
+                        <span class="badge" style="background:rgba(--danger,.15);color:var(--danger)">
+                            OPEN </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">Keyboard</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ Printer &bull;
+                        📅 2026-05-24 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                Client no 9 A nya mati </div>
+
+            <!-- Admin notes -->
+
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (1)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-24 16:55 — Wawan: laporan dibuat (Printer, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260524-0016">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open" selected>🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved">🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260516-0015</span>
+                        <span class="badge" style="background:rgba(--warn,.15);color:var(--warn)">
+                            IN PROGRESS </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">keybord pc 5 dan 11</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Andika &bull;
+                        🏢 GRAHA &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-05-16 &bull; 📍 keybord lt 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                keybord eror </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Order keyboard, stok keyboard new habis </div>
+
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-22 15:04 — Supervisor: status open → in_progress | catatan: &quot;Order keyboard, stok
+                        keyboard new habis&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-16 08:25 — Andika: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260516-0015">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress" selected>🟡 In Progress</option>
+                            <option value="resolved">🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260413-0003</span>
+                        <span class="badge" style="background:rgba(--warn,.15);color:var(--warn)">
+                            IN PROGRESS </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">Game point plank minta di normalin
+                        bang</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ Software &bull;
+                        📅 2026-04-13 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-22 16:59 — Supervisor: status open → in_progress</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-13 05:52 — Wawan: laporan dibuat (Software, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260413-0003">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress" selected>🟡 In Progress</option>
+                            <option value="resolved">🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260516-0014</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🔴 Tinggi</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC SERVER OVERHEAT</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-05-16 &bull; 📍 PC SERVER Lt. 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                tiba' client jadi ngefreeze semua, pas dicek kipas cpu low banget, terus server direstart client juga
+                normal tapi kipas cpu masih low </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Semua normal, kalau update game tolong jgn di saat lagi ramai atau full.
+                Beban server jadi berat makanya crash kemarin. </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-05-19 00:41:02 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-19 00:41 — Supervisor: status in_progress → resolved | catatan: &quot;Semua normal,
+                        kalau update game tolong jgn di saat lagi ramai atau full. Beban server jadi berat makanya crash
+                        kemarin.&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-17 17:01 — Supervisor: status open → in_progress | catatan: &quot;Itu bukan kipas procie
+                        tapi fan casing lemah, masih di pantau dulu suhu procienya&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-16 04:15 — Edoy: laporan dibuat (PC/Hardware, prioritas tinggi)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260516-0014">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260429-0011</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🔴 Tinggi</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">MONITOR ASUS 144hz MATI</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Doy &bull;
+                        🏢 GRAHA &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-29 &bull; 📍 PC 35 LT.2 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                MONITOR TIDAK HIDUP (ORDER MONITOR) </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah terpasang </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-05-03 18:56:13 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-03 18:56 — Supervisor: status open → resolved | catatan: &quot;Sudah terpasang&quot;
+                    </div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-29 20:16 — Doy: laporan dibuat (PC/Hardware, prioritas tinggi)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260429-0011">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260508-0013</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">bangku patah</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Andika &bull;
+                        🏢 GRAHA &bull;
+                        🏷️ Lainnya &bull;
+                        📅 2026-05-08 &bull; 📍 bangku graha lt 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                bangku patah </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> diperbaiki eman </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-05-11 08:44:38 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-11 08:44 — Boss: status resolved → resolved | catatan: &quot;diperbaiki eman&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-11 08:27 — Supervisor: status open → resolved | catatan: &quot;Sudah di perbaiki kang
+                        Eman&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-08 22:47 — Andika: laporan dibuat (Lainnya, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260508-0013">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260508-0012</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No 13 Keyboard Tombol ESC Rusak
+                    </div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-05-08 &bull; 📍 PC No 13 Lantai 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah di perbaiki ganti switch </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-05-13 18:47:59 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-13 18:47 — Supervisor: status open → resolved | catatan: &quot;Sudah di perbaiki ganti
+                        switch&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-05-08 22:46 — Edoy: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260508-0012">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260425-0010</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No. 30 LAN Mati</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-25 &bull; 📍 PC No. 30 Lantai 2 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Di bios tidak enable </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-27 21:47:11 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-27 21:47 — Supervisor: status open → resolved | catatan: &quot;Di bios tidak
+                        enable&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-25 21:35 — Edoy: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260425-0010">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260425-0009</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No. 33, 34 Mati Total</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-25 &bull; 📍 PC No. 33, 34 Lantai 2 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah di ganti baru </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-30 17:48:29 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (4)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-30 17:48 — Supervisor: status in_progress → resolved | catatan: &quot;Sudah di ganti
+                        baru&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-28 13:18 — Boss: status in_progress → in_progress | catatan: &quot;sedang di pesan&quot;
+                    </div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-27 21:54 — Supervisor: status open → in_progress | catatan: &quot;Order PSU baru, PSU
+                        matot&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-25 21:34 — Edoy: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260425-0009">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260419-0008</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No. 18 LAN</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-19 &bull; 📍 PC No. 18 Lantai 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                Lan merah terus </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Tersenggol LAN nya </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-22 16:55:45 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-22 16:55 — Supervisor: status open → resolved | catatan: &quot;Tersenggol LAN nya&quot;
+                    </div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-19 19:59 — Edoy: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260419-0008">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260419-0007</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No. 7 LAN Secure Boot Violation
+                    </div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ Software &bull;
+                        📅 2026-04-19 &bull; 📍 PC NO. 7 Lantai 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                Invalid signature detected. Check secure boot policy in setup, Sudah coba enable fast boot tapi tetap
+                tidak bisa </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Secure boot sudah di disable </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-22 16:59:11 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (2)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-22 16:59 — Supervisor: status open → resolved | catatan: &quot;Secure boot sudah di
+                        disable&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-19 19:56 — Edoy: laporan dibuat (Software, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260419-0007">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260417-0006</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">PC No 4 BUG VGA</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Edoy &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-17 &bull; 📍 PC No.4 Lantai 1 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div
+                style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--text);margin-bottom:12px;line-height:1.6">
+                sudah coba dibersihkan portnya tapi tetap monitor tidak mau nyala </div>
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Ganti kabel HDMI </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-28 17:29:48 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-28 17:29 — Supervisor: status in_progress → resolved | catatan: &quot;Ganti kabel
+                        HDMI&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-22 16:57 — Supervisor: status open → in_progress</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-17 21:44 — Edoy: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260417-0006">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260415-0005</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">internet masih down 22nya</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ Jaringan &bull;
+                        📅 2026-04-15 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah lumayan tinggal di pantau saja, jumping nya tidak separah saat
+                trouble </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-15 16:38:13 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 16:38 — Supervisor: status resolved → resolved | catatan: &quot;Sudah lumayan tinggal
+                        di pantau saja, jumping nya tidak separah saat trouble&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 16:37 — Supervisor: status open → resolved | catatan: &quot;Sudah lumayan tinggal di
+                        pantau saja, jumping nya tidak separah saat trouble&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 12:21 — Wawan: laporan dibuat (Jaringan, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260415-0005">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260414-0004</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">Internet jumping² ping nya</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ Jaringan &bull;
+                        📅 2026-04-14 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Done yah tinggal di pantau kembali </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-15 16:38:55 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 16:38 — Supervisor: status open → resolved | catatan: &quot;Done yah tinggal di
+                        pantau kembali&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-14 05:15 — Supervisor: status open → open</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-14 04:56 — Wawan: laporan dibuat (Jaringan, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260414-0004">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260412-0003</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">client 38 kabel lan merah terus</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-12 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah di krimping ulang </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-15 18:51:36 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (5)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 18:51 — Supervisor: status in_progress → resolved | catatan: &quot;Sudah di krimping
+                        ulang&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 14:06 — Boss: status in_progress → in_progress</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 14:06 — Supervisor: status resolved → in_progress</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 14:03 — Supervisor: status open → resolved | catatan: &quot;Sudah clear cek kembali
+                        hanya kotor saja soketnya&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 10:18 — Wawan: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260412-0003">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--border);position:relative">
+            <!-- Header -->
+            <div
+                style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                        <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">TR-20260412-0002</span>
+                        <span class="badge" style="background:rgba(--success,.15);color:var(--success)">
+                            RESOLVED </span>
+                        <span style="font-size:12px">🟡 Sedang</span>
+                    </div>
+                    <div style="font-size:16px;font-weight:600;margin-bottom:4px">CLIENT 15 SERING BLUSCREEN</div>
+                    <div style="font-size:12px;color:var(--muted)">
+                        👤 Wawan &bull;
+                        🏢 PUSAT &bull;
+                        🏷️ PC/Hardware &bull;
+                        📅 2026-04-12 </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+
+            <!-- Admin notes -->
+            <div
+                style="background:rgba(79,195,247,.06);border:1px solid rgba(79,195,247,.2);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--accent2);margin-bottom:12px">
+                💬 <strong>Catatan:</strong> Sudah di repasta VGA di pantau kembali saja </div>
+
+            <div style="font-size:11px;color:var(--success);margin-bottom:12px">
+                ✅ Resolved: 2026-04-15 18:52:18 </div>
+
+            <!-- Activity Log -->
+            <details style="margin-bottom:12px">
+                <summary style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none">📜 Activity Log (3)
+                </summary>
+                <div
+                    style="margin-top:6px;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);max-height:150px;overflow-y:auto">
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-15 18:52 — Supervisor: status in_progress → resolved | catatan: &quot;Sudah di repasta
+                        VGA di pantau kembali saja&quot;</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 14:03 — Supervisor: status open → in_progress</div>
+                    <div
+                        style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(42,45,62,.4)">
+                        2026-04-12 10:14 — Wawan: laporan dibuat (PC/Hardware, prioritas sedang)</div>
+                </div>
+            </details>
+
+            <!-- Actions -->
+            <div
+                style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding-top:12px;border-top:1px solid var(--border)">
+                <form method="post" style="display:flex;gap:8px;flex:1;align-items:flex-end;flex-wrap:wrap">
+                    <input type="hidden" name="csrf_token"
+                        value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb"> <input type="hidden"
+                        name="action" value="update_status">
+                    <input type="hidden" name="trouble_id" value="TR-20260412-0002">
+                    <div style="flex:1;min-width:120px">
+                        <label style="font-size:10px;margin-bottom:4px">Status</label>
+                        <select name="new_status" style="margin:0;padding:7px 10px;font-size:12px">
+                            <option value="open">🔴 Open</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved" selected>🟢 Resolved</option>
+                        </select>
+                    </div>
+                    <div style="flex:2;min-width:150px">
+                        <label style="font-size:10px;margin-bottom:4px">Catatan (opsional)</label>
+                        <input type="text" name="catatan_admin" placeholder="Tambah catatan..."
+                            style="margin:0;padding:7px 10px;font-size:12px" value="">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:7px 14px;font-size:12px">💾
+                        Update</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:8px">
+            Menampilkan 16 dari 16 laporan
+        </div>
+
+
+    </div><!-- .page -->
+    <script>
+        // Auto-inject CSRF token into all POST forms
+        document.querySelectorAll('form[method="post"]').forEach(function (form) {
+            if (!form.querySelector('input[name="csrf_token"]')) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'csrf_token';
+                input.value = "b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb";
+                form.appendChild(input);
+            }
+        });
+    </script>
+</body>
+
+</html>

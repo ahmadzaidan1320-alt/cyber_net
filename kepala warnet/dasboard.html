@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Cyber_Net </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" href="../css/style.css">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3e;
+            --accent: #1690ee;
+            --accent2: #4fc3f7;
+            --danger: #ef5350;
+            --success: #66bb6a;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 8px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* BACKGROUND MARIO SIMPEL */
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.92) 0%,
+                    rgba(10, 18, 48, 0.95) 50%,
+                    rgba(5, 10, 30, 0.98) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* ── Top Bar ── */
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 52px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .topbar-brand span {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: var(--surface);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            gap: 2px;
+            padding: 0 24px;
+            overflow-x: auto;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: color .15s, border-color .15s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ── Page Wrapper ── */
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 24px 60px;
+        }
+
+        /* ── Page Title ── */
+        .page-title {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity .15s;
+        }
+
+        .btn:hover {
+            opacity: .88;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #111;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page {
+                padding: 16px 12px 40px;
+            }
+
+            .topbar {
+                padding: 0 12px;
+                height: 46px;
+            }
+
+            nav {
+                padding: 0 8px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a class="topbar-brand" href="Login.html">Cyber<span>_Net </span></a>
+        <div style="display:flex;align-items:center;gap:12px">
+            <span
+                style="font-family:var(--mono);font-size:10px;color:var(--accent2);background:rgba(79,195,247,.12);border:1px solid rgba(79,195,247,.25);padding:3px 8px;border-radius:99px">👤
+                OWNER</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">22 Apr 2026</span>
+            <a href="Login.html"
+                style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:99px;transition:color .15s"
+                onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'">Logout</a>
+        </div>
+        </form>
+    </div>
+
+    <nav>
+        <a href="dasboard.html" class="active">🏠 Home</a>
+        <a href="data sales.html">📋 Lihat Data</a>
+        <a href="kasbon.html">💳 debit</a>
+        <a href="laporan op.html">👥 Op Report</a>
+        <a href="trouble.html">🔧 Trouble</a>
+        <a href="izzin.html">🏖️ Izin</a>
+        <a href="equipment .html">🖥️ Equipment</a>
+    </nav>
+
+    <div class="page">
+        <h1 class="page-title">Dashboard</h1>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px;">
+            <div class="card" style="text-align:center;padding:24px 16px;">
+                <div
+                    style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--accent);margin-bottom:6px">
+                    Rp 73.596.510</div>
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Omset Bulan
+                    Ini</div>
+            </div>
+            <div class="card" style="text-align:center;padding:24px 16px;">
+                <div
+                    style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--success);margin-bottom:6px">
+                    Rp 29.510.500</div>
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Net Bulan
+                    Ini</div>
+            </div>
+            <div class="card" style="text-align:center;padding:24px 16px;">
+                <div
+                    style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--danger);margin-bottom:6px">
+                    Rp 9.738.999</div>
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Total Kasbon
+                </div>
+            </div>
+            <div class="card" style="text-align:center;padding:24px 16px;">
+                <div
+                    style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--accent2);margin-bottom:6px">
+                    122 entries</div>
+                <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px">Total Input
+                    Entry</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📂 Status Data</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+                <span
+                    style="display:inline-block;padding:2px 8px;background:rgba(102,187,106,.15);color:var(--success);border-radius:99px;font-size:11px;font-weight:600;font-family:var(--mono);">SQLite</span>
+                <span style="color:var(--muted)">Database aktif — zaidan_net.db</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🚀 Menu Cepat</div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px">
+                <a href="data sales.html" class="btn btn-secondary">📋 Lihat Semua Data</a>
+                <a href="laporan op.html" class="btn btn-secondary">👥 Laporan Operator</a>
+                <a href="kasbon.html" class="btn btn-secondary">💳 Kasbon Bulanan</a>
+                <a href="troule.html" class="btn btn-secondary">🔧 Trouble Report</a>
+                <a href="izzin.html" class="btn btn-secondary">🏖️ Izin & Absensi</a>
+            </div>
+
+</body>
+
+</html>
+</div>
+
+<script>
+    document.querySelectorAll('form[method="post"]').forEach(function (form) {
+        if (!form.querySelector('input[name="csrf_token"]')) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'csrf_token';
+            input.value = "5c6486fdc385b8a12f4fa93cd9b9c8bbe6aeead838ec1942ab9b3a64f50d9be1";
+            form.appendChild(input);
+        }
+    });
+</script>
+</body>
+
+</html>

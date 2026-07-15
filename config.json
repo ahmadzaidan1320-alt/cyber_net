@@ -1,0 +1,29 @@
+{
+    "banner": {
+        "title": "⚡ cyber_net",
+        "tagline": "Internet Cepat • Stabil • Terjangkau",
+        "subtitle": "Nikmati koneksi internet super cepat dengan jaringan fiber optic terdepan di wilayah Anda.",
+        "background": {
+            "type": "image",
+            "url": "/static/backgrounds/cyberpunk.jpg",
+            "fallback": "linear-gradient(135deg, #0f0f23 0%, #1a0033 50%, #000 100%)"
+        },
+        "features": [
+            {
+                "icon": "⚡",
+                "title": "Kecepatan Tinggi",
+                "desc": "Hingga 100 Mbps download/upload tanpa buffering"
+            },
+            {
+                "icon": "🛡️",
+                "title": "100% Uptime",
+                "desc": "Garansi jaringan stabil 24/7 dengan SLA 99.9%"
+            },
+            {
+                "icon": "💰",
+                "title": "Harga Terjangkau",
+                "desc": "Mulai dari Rp 150.000/bulan tanpa biaya instalasi"
+            }
+        ]
+    }
+}

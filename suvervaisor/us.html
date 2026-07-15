@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesan PC — Cyber_net</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3e;
+            --accent: #151ed1;
+            --danger: #ef5350;
+            --success: #66bb6a;
+            --warn: #ffa726;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 8px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px
+        }
+
+        /* BACKGROUND MARIO SIMPEL */
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.92) 0%,
+                    rgba(10, 18, 48, 0.95) 50%,
+                    rgba(5, 10, 30, 0.98) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+
+        .topbar {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px
+        }
+
+        .brand {
+            font-family: var(--mono);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 16px
+        }
+
+        .form-group {
+            margin-bottom: 14px
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px
+        }
+
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 15px;
+            padding: 12px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent)
+        }
+
+        .pc-grid,
+        .jam-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .pc-btn,
+        .jam-btn {
+            padding: 12px 8px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+            text-align: center;
+        }
+
+        .pc-btn:hover,
+        .jam-btn:hover {
+            border-color: var(--muted)
+        }
+
+        .pc-btn.selected {
+            border-color: var(--accent);
+            background: rgba(21, 30, 209, 0.2);
+            color: var(--accent)
+        }
+
+        .jam-btn.selected {
+            border-color: var(--success);
+            background: rgba(102, 187, 106, 0.2);
+            color: var(--success)
+        }
+
+        .pc-btn.occupied {
+            background: rgba(239, 83, 80, 0.15);
+            border-color: var(--danger);
+            color: var(--danger);
+            cursor: not-allowed;
+            opacity: 0.6
+        }
+
+        .summary {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            margin-bottom: 16px
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(42, 45, 62, 0.3)
+        }
+
+        .summary-row:last-child {
+            border-bottom: none
+        }
+
+        .summary-label {
+            color: var(--muted)
+        }
+
+        .summary-value {
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .total-harga {
+            font-size: 18px;
+            color: var(--accent);
+            font-weight: 700;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .qris-box {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .qris-box img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .qris-text {
+            color: #000;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-admin {
+            background: var(--accent);
+            color: #fff
+        }
+
+        .btn-customer {
+            background: var(--success);
+            color: #fff
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="brand">Cyber _Net</div>
+    </div>
+
+    <div class="container">
+
+        <!-- Status PC -->
+        <div class="card">
+            <div class="card-title">🖥️ Status PC</div>
+            <div class="pc-grid" id="pcGrid"></div>
+        </div>
+
+        <!-- Form Pemesanan -->
+        <div class="card">
+            <div class="card-title">🎮 Pesan Main Game</div>
+            <form id="orderForm">
+
+                <div class="form-group">
+                    <label>Nama Kamu</label>
+                    <input type="text" id="nama" placeholder="Masukkan nama" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nomor WhatsApp</label>
+                    <input type="tel" id="nowa" placeholder="628xxxxxxxxxx" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pilih PC</label>
+                    <div class="pc-grid" id="pilihPC">
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 1</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 2</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 3</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 4</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 5</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 6</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 7</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 8</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 9</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 10</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 11</button>
+                        <button type="button" class="pc-btn" onclick="pilihPC(this)">PC 12</button>
+                    </div>
+                    <input type="hidden" id="pcTerpilih" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Durasi Main</label>
+                    <div class="jam-grid" id="pilihJam">
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 1)">1 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 2)">2 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 3)">3 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 4)">4 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 5)">5 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 6)">6 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 7)">7 Jam</button>
+                        <button type="button" class="jam-btn" onclick="pilihJam(this, 8)">8 Jam</button>
+                    </div>
+                    <input type="hidden" id="jamTerpilih" required>
+                </div>
+
+                <!-- QRIS Section -->
+                <div class="qris-box">
+                    <img src="qris.jpeg" alt="QRIS">
+                    <div class="qris-text">Scan QRIS</div>
+
+                </div>
+
+                <!-- Ringkasan -->
+                <div class="summary">
+                    <div class="summary-row">
+                        <span class="summary-label">PC</span>
+                        <span class="summary-value" id="summaryPC">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Durasi</span>
+                        <span class="summary-value" id="summaryJam">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Harga/ Jam</span>
+                        <span class="summary-value">Rp 5.000</span>
+                    </div>
+                    <div class="total-harga">
+                        Total: Rp <span id="totalBayar">0</span>
+                    </div>
+                </div>
+
+                <!-- Tombol选择 -->
+                <button type="button" class="btn btn-admin" onclick="kirimKeAdmin()">
+                    📱 Kirim ke Admin
+                </button>
+
+                <button type="button" class="btn btn-customer" onclick="kirimKePelanggan()">
+                    📤 Kirim Invoice ke Pelanggan
+                </button>
+                <!-- Tombol Pesan di bawah -->
+                <div style="margin: 20px auto; text-align: center;">
+                    <button type="survervaisor" class="btn btn-primary"
+                        onclick="window.location.href='dasboard.html'">Kembali
+                        ke dasboard</button>
+                </div>
+
+                <script>
+                    document.querySelectorAll('form[method="post"]').forEach(function (form) {
+                        if (!form.querySelector('input[name="csrf_token"]')) {
+                            var input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'csrf_token';
+                            input.value = "5c6486fdc385b8a12f4fa93cd9b9c8bbe6aeead838ec1942ab9b3a64f50d9be1";
+                            form.appendChild(input);
+                        }
+                    });
+                </script>
+</body>
+</form>
+</div>
+
+</div>
+
+<script>
+    // --- KONFIGURASI ---
+    const NO_ADMIN = "62xxxxxxxx"; // Ganti dengan nomor WA Admin/Owner
+    const HARGA_PER_JAM = 5000;
+    // --------------------
+
+    let pcDipilih = '';
+    let jamDipilih = 0;
+
+    // Generate Status PC
+    const pcTerpakai = ['PC 3', 'PC 7'];
+    const pcGrid = document.getElementById('pcGrid');
+
+    for (let i = 1; i <= 12; i++) {
+        const namaPC = 'PC ' + i;
+        const btn = document.createElement('button');
+        btn.className = 'pc-btn';
+        btn.textContent = namaPC;
+        if (pcTerpakai.includes(namaPC)) {
+            btn.classList.add('occupied');
+            btn.onclick = () => alert('PC ini sedang digunakan!');
+        }
+        pcGrid.appendChild(btn);
+    }
+
+    // Pilih PC
+    function pilihPC(btn) {
+        document.querySelectorAll('#pilihPC .pc-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        pcDipilih = btn.textContent;
+        document.getElementById('pcTerpilih').value = pcDipilih;
+        updateSummary();
+    }
+
+    // Pilih Jam
+    function pilihJam(btn, jam) {
+        document.querySelectorAll('#pilihJam .jam-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        jamDipilih = jam;
+        document.getElementById('jamTerpilih').value = jam;
+        updateSummary();
+    }
+
+    // Update Ringkasan
+    function updateSummary() {
+        document.getElementById('summaryPC').textContent = pcDipilih || '-';
+        document.getElementById('summaryJam').textContent = jamDipilih ? jamDipilih + ' Jam' : '-';
+        document.getElementById('totalBayar').textContent = (jamDipilih * HARGA_PER_JAM).toLocaleString('id-ID');
+    }
+
+    // Ambil Data Form
+    function getData() {
+        const nama = document.getElementById('nama').value;
+        const nowa = document.getElementById('nowa').value;
+        const pc = document.getElementById('pcTerpilih').value;
+        const jam = document.getElementById('jamTerpilih').value;
+        const total = (jam * HARGA_PER_JAM).toLocaleString('id-ID');
+
+        if (!nama || !nowa || !pc || !jam) {
+            alert('Mohon lengkapi semua data!');
+            return null;
+        }
+        return { nama, nowa, pc, jam, total };
+    }
+
+    // Kirim ke Admin (Cara Baru)
+    function kirimKeAdmin() {
+        const data = getData();
+        if (!data) return;
+
+        const pesan = `📢 *PESANAN BARU*\n\n` +
+            `👤 Nama: ${data.nama}\n` +
+            `📱 WA: ${data.nowa}\n` +
+            `🖥️ PC: ${data.pc}\n` +
+            `⏰ Durasi: ${data.jam} Jam\n` +
+            `💰 Total: Rp ${data.total}\n\n` +
+            `_Mohon dicek ketersediaannya_`;
+
+        const url = `https://web.whatsapp.com/send?phone=${6285715311201}&text=${encodeURIComponent(pesan)}`;
+        window.open(url, '_blank');
+    }
+
+    // Kirim ke Pelanggan (Invoice) - dengan link QRIS
+    function kirimKePelanggan() {
+        const data = getData();
+        if (!data) return;
+
+        const qrLink = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CYBERNET_PAYMENT_LINK"; // Ganti dengan link pembayaran QRIS Anda
+
+        let pesan = '';
+
+        if (data.cara === 'Tunai') {
+            pesan = `🎮 *INVOICE CYBER NET*\n\n` +
+                `Hai ${data.nama}! 👋\n\n` +
+                `📝 Rincian Pesanan:\n` +
+                `🖥️ PC: ${data.pc}\n` +
+                `⏰ Durasi: ${data.jam} Jam\n` +
+                `💵 Total: Rp ${data.total}\n` +
+                `💳 Bayar: Tunai (Bayar di Loket)\n\n` +
+                `Silakan datang ke tempat dan bayar di loket!\n` +
+                `Konfirmasi ke admin dopo pembayaran.`;
+        } else {
+            pesan = `🎮 *INVOICE CYBER NET*\n\n` +
+                `Hai ${data.nama}! 👋\n\n` +
+                `📝 Rincian Pesanan:\n` +
+                `🖥️ PC: ${data.pc}\n` +
+                `⏰ Durasi: ${data.jam} Jam\n` +
+                `💵 Total: Rp ${data.total}\n` +
+                `💳 Bayar: QRIS\n\n` +
+                `📱 Klik link QRIS ini untuk scan:\n` +
+                `${qrLink}\n\n` +
+                `atau buka linkinvoice ini:\n` +
+                `[LINK_INVOICE_ANDA]`;
+        }
+
+        const cleanWA = data.nowa.replace(/[^0-9]/g, '');
+        const url = `https://web.whatsapp.com/send?phone=${cleanWA}&text=${encodeURIComponent(pesan)}`;
+        window.open(url, '_blank');
+    }
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izin &amp; Absensi — Emperor Warnet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3e;
+            --accent: #1690ee;
+            --accent2: #4fc3f7;
+            --danger: #ef5350;
+            --success: #66bb6a;
+            --text: #e8eaf0;
+            --muted: #7c7f8e;
+            --radius: 8px;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* BACKGROUND MARIO SIMPEL */
+        body {
+            background:
+                linear-gradient(135deg,
+                    rgba(15, 17, 23, 0.92) 0%,
+                    rgba(10, 18, 48, 0.95) 50%,
+                    rgba(5, 10, 30, 0.98) 100%),
+                url('mario.jpg') center/cover no-repeat fixed;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            min-height: 100vh;
+        }
+
+        /* ── Top Bar ── */
+        .topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 52px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-family: var(--mono);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .topbar-brand span {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: var(--surface);
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            gap: 2px;
+            padding: 0 24px;
+            overflow-x: auto;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 14px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: color .15s, border-color .15s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* ── Page Wrapper ── */
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 24px 60px;
+        }
+
+        /* ── Page Title ── */
+        .page-title {
+            font-family: var(--mono);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* ── Tables ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background: #22253a;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .data-table tr.duplicate td {
+            background: rgba(239, 83, 80, .08);
+        }
+
+        .data-table tfoot td {
+            font-weight: 600;
+            color: var(--accent);
+            background: #1e2130;
+            border-top: 2px solid var(--border);
+        }
+
+        /* ── Forms ── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 14px;
+            padding: 9px 12px;
+            outline: none;
+            transition: border-color .15s;
+            appearance: auto;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        input[readonly] {
+            background: #22253a;
+            color: var(--accent);
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity .15s, transform .1s;
+        }
+
+        .btn:hover {
+            opacity: .88;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #111;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+
+        .filter-bar .form-group {
+            margin-bottom: 0;
+            min-width: 160px;
+        }
+
+        /* ── Inline entries (extra cost / kasbon rows) ── */
+        .entry-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .entry-row input,
+        .entry-row select {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .badge-ok {
+            background: rgba(102, 187, 106, .15);
+            color: var(--success);
+        }
+
+        .badge-warn {
+            background: rgba(239, 83, 80, .15);
+            color: var(--danger);
+        }
+
+        .badge-neutral {
+            background: rgba(124, 127, 142, .15);
+            color: var(--muted);
+        }
+
+        /* ── Alert ── */
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: rgba(102, 187, 106, .12);
+            border: 1px solid rgba(102, 187, 106, .3);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 83, 80, .12);
+            border: 1px solid rgba(239, 83, 80, .3);
+            color: var(--danger);
+        }
+
+        .alert-info {
+            background: rgba(79, 195, 247, .10);
+            border: 1px solid rgba(79, 195, 247, .3);
+            color: var(--accent2);
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* ── Responsive Tables ── */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .data-table.sticky-first th:first-child,
+        .data-table.sticky-first td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: var(--surface);
+        }
+
+        .data-table.sticky-first th:first-child {
+            background: #22253a;
+            z-index: 3;
+        }
+
+        .data-table.sticky-first tfoot td:first-child {
+            background: #1e2130;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .page {
+                padding: 16px 12px 40px;
+            }
+
+            nav {
+                padding: 0 8px;
+            }
+
+            nav a {
+                padding: 8px 8px;
+                font-size: 11px;
+                gap: 3px;
+            }
+
+            .topbar {
+                padding: 0 12px;
+                height: 46px;
+            }
+
+            .topbar-brand {
+                font-size: 13px;
+            }
+
+            .page-title {
+                font-size: 18px;
+                margin-bottom: 16px;
+            }
+
+            .filter-bar {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .filter-bar .form-group {
+                min-width: 120px;
+            }
+
+            .card {
+                padding: 14px 16px;
+            }
+
+            /* Smaller table text on mobile */
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th {
+                font-size: 10px;
+                padding: 8px 8px;
+            }
+
+            .data-table td {
+                padding: 7px 8px;
+            }
+
+            /* Hide less important columns on mobile */
+            .data-table .hide-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a span.nav-label {
+                display: none;
+            }
+
+            .data-table {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <a class="topbar-brand" href="index.php">Cyber<span>_Net</span></a>
+        <div style="display:flex;align-items:center;gap:12px">
+            <span
+                style="font-family:var(--mono);font-size:10px;color:var(--accent2);background:rgba(79,195,247,.12);border:1px solid rgba(79,195,247,.25);padding:3px 8px;border-radius:99px">👤
+                OWNER</span> <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">25 May
+                2026</span>
+            <a href="?logout=1"
+                style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:99px;transition:color .15s"
+                onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'">Logout</a>
+        </div>
+    </div>
+
+    <nav>
+        <a href="dasboard.html">
+            🏠 Home </a>
+        <a href="data sales.html">
+            📋 Lihat Data </a>
+        <a href="kasbon.html">
+            💳 Kasbon </a>
+        <a href="laporan op.html">
+            👥 Op Report </a>
+        <a href="troule.html">
+            🔧 Trouble </a>
+        <a href="izzin.html" class="active">
+            🏖️ Izin </a>
+        <a href="equipment .html">
+            🖥️ Equipment </a>
+    </nav>
+
+    <div class="page">
+        <h1 class="page-title">Izin &amp; Absensi</h1>
+
+        <!-- Summary Cards -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px">
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--warn)">1</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Pending</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--success)">3</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Approved</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--danger)">1</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Rejected</div>
+            </div>
+            <div class="card" style="text-align:center;padding:16px">
+                <div style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent2)">5</div>
+                <div
+                    style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+                    Total</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <form method="get" class="filter-bar">
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status" onchange="this.form.submit()">
+                    <option value="">Semua</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="approved">✅ Approved</option>
+                    <option value="rejected">❌ Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Operator</label>
+                <select name="operator" onchange="this.form.submit()">
+                    <option value="">Semua Operator</option>
+                    <option value="Andika">Andika</option>
+                    <option value="Sekar">Sekar</option>
+                    <option value="niko">niko</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bulan</label>
+                <select name="month" onchange="this.form.submit()">
+                    <option value="">Semua Bulan</option>
+                    <option value="2026-04">2026-04</option>
+                    <option value="2026-05">2026-05</option>
+                    <option value="2026-06">2026-06</option>
+                </select>
+            </div>
+        </form>
+
+
+        <div class="card" style="padding:0;overflow:hidden">
+            <div style="overflow-x:auto">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tanggal</th>
+                            <th>Operator</th>
+                            <th>Jenis</th>
+                            <th>Alasan</th>
+                            <th>Diajukan</th>
+                            <th>Status</th>
+                            <th>Oleh</th>
+                            <th style="text-align:right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr styesl="">
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">IZ-20260519-0005</td>
+                            <td style="font-family:var(--mono);white-space:nowrap">2026-06-16</td>
+                            <td style="font-weight:600">niko</td>
+                            <td>🏖️ Libur</td>
+                            <td style="font-size:12px;color:var(--muted);max-width:200px">ada acara keluarga</td>
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">2026-05-19 20:30</td>
+                            <td><span class="badge" style="background:rgba(255,167,38,.15);color:var(--warn)">⏳
+                                    Pending</span></td>
+                            <td style="font-size:11px;color:var(--accent2)">-</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+                                    <form method="post" style="display:inline">
+                                        <input type="hidden" name="csrf_token"
+                                            value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb">
+                                        <input type="hidden" name="action" value="approve">
+                                        <input type="hidden" name="izin_id" value="IZ-20260519-0005">
+                                        <button type="submit" class="btn btn-primary"
+                                            style="padding:5px 12px;font-size:11px">✅ Approve</button>
+                                    </form>
+                                    <form method="post" style="display:inline">
+                                        <input type="hidden" name="csrf_token"
+                                            value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb">
+                                        <input type="hidden" name="action" value="reject">
+                                        <input type="hidden" name="izin_id" value="IZ-20260519-0005">
+                                        <button type="submit" class="btn btn-ghost"
+                                            style="padding:5px 12px;font-size:11px;color:var(--danger);border-color:var(--danger)">❌
+                                            Tolak</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr styel="">
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">IZ-20260519-0004</td>
+                            <td style="font-family:var(--mono);white-space:nowrap">2026-05-29</td>
+                            <td style="font-weight:600">niko</td>
+                            <td>🏖️ Libur</td>
+                            <td style="font-size:12px;color:var(--muted);max-width:200px">Mau kontrol ke dokter jiwa
+                            </td>
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">2026-05-19 20:29</td>
+                            <td><span class="badge badge-ok">✅ Approved</span></td>
+                            <td style="font-size:11px;color:var(--accent2)">Supervisor</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+                                    <form method="post" style="display:inline">
+                                        <input type="hidden" name="csrf_token"
+                                            value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb">
+                                        <input type="hidden" name="action" value="reject">
+                                        <input type="hidden" name="izin_id" value="IZ-20260519-0004">
+                                        <button type="submit" class="btn btn-ghost"
+                                            style="padding:5px 10px;font-size:11px" title="Batalkan approval">↩️
+                                            Revoke</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr styel="">
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">IZ-20260504-0003</td>
+                            <td style="font-family:var(--mono);white-space:nowrap">2026-05-12</td>
+                            <td style="font-weight:600">Sekar</td>
+                            <td>🏖️ Libur</td>
+                            <td style="font-size:12px;color:var(--muted);max-width:200px"></td>
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">2026-05-04 21:25</td>
+                            <td><span class="badge badge-ok">✅ Approved</span></td>
+                            <td style="font-size:11px;color:var(--accent2)">Supervisor</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+                                    <form method="post" style="display:inline">
+                                        <input type="hidden" name="csrf_token"
+                                            value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb">
+                                        <input type="hidden" name="action" value="reject">
+                                        <input type="hidden" name="izin_id" value="IZ-20260504-0003">
+                                        <button type="submit" class="btn btn-ghost"
+                                            style="padding:5px 10px;font-size:11px" title="Batalkan approval">↩️
+                                            Revoke</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr styel="">
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">IZ-20260412-0002</td>
+                            <td style="font-family:var(--mono);white-space:nowrap">2026-04-09</td>
+                            <td style="font-weight:600">Andika</td>
+                            <td>🤒 Sakit</td>
+                            <td style="font-size:12px;color:var(--muted);max-width:200px"></td>
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">2026-04-12 14:06</td>
+                            <td><span class="badge badge-ok">✅ Approved</span></td>
+                            <td style="font-size:11px;color:var(--accent2)">Supervisor</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+                                    <form method="post" style="display:inline">
+                                        <input type="hidden" name="csrf_token"
+                                            value="b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb">
+                                        <input type="hidden" name="action" value="reject">
+                                        <input type="hidden" name="izin_id" value="IZ-20260412-0002">
+                                        <button type="submit" class="btn btn-ghost"
+                                            style="padding:5px 10px;font-size:11px" title="Batalkan approval">↩️
+                                            Revoke</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="opacity:.5">
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">IZ-20260412-0001</td>
+                            <td style="font-family:var(--mono);white-space:nowrap">2026-04-02</td>
+                            <td style="font-weight:600">Sekar</td>
+                            <td>🏖️ Libur</td>
+                            <td style="font-size:12px;color:var(--muted);max-width:200px"></td>
+                            <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">2026-04-12 08:29</td>
+                            <td><span class="badge badge-warn">❌ Rejected</span></td>
+                            <td style="font-size:11px;color:var(--accent2)">Boss</td>
+                            <td style="text-align:right">
+                                <div style="display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:8px">
+            Menampilkan 5 dari 5 izin
+        </div>
+
+
+    </div><!-- .page -->
+    <script>
+        // Auto-inject CSRF token into all POST forms
+        document.querySelectorAll('form[method="post"]').forEach(function (form) {
+            if (!form.querySelector('input[name="csrf_token"]')) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'csrf_token';
+                input.value = "b8b95d11b799239c7ce7568fabf34f75495fc053b959182041d319a7431cd1fb";
+                form.appendChild(input);
+            }
+        });
+    </script>
+</body>
+
+</html>
